@@ -8,6 +8,11 @@ defmodule Queryable.Sample do
     field(:age, :integer)
   end
 
-  defp apply_criteria({:name, name}, query), do: where(query, [el], el.name == ^name)
-  defp apply_criteria({:surname, surname}, query), do: where(query, [el], el.surname == ^surname)
+  criteria {:name, name}, on: el do
+    el.name == ^name
+  end
+
+  criteria {:surname, surname}, on: el do
+    el.surname == ^surname
+  end
 end
