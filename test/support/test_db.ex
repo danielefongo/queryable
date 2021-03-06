@@ -12,6 +12,12 @@ defmodule DbTest do
         do: Enum.each(elements, fn element -> Repo.insert(element) end)
 
       defp insert(element) when is_struct(element), do: Repo.insert(element)
+
+      defp find(criteria) do
+        criteria
+        |> Sample.query()
+        |> Repo.all()
+      end
     end
   end
 end
