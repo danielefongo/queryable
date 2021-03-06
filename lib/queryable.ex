@@ -15,10 +15,10 @@ defmodule Queryable do
     end
   end
 
-  defmacro criteria(on, {key, value}, body) do
+  defmacro criteria({key, value}, body) do
     quote do
       defp apply_criteria({unquote(key), unquote(value)}, query) do
-        from([unquote(on)] in query, unquote(body))
+        from([el] in query, unquote(body))
       end
     end
   end

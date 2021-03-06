@@ -8,7 +8,7 @@ defmodule Queryable.Sample do
     field(:age, :integer)
   end
 
-  criteria(el, {:name, name}, where: el.name == ^name)
-  criteria(el, {:surname, surname}, where: el.surname == ^surname)
-  criteria(el, {:order_by, field}, order_by: ^field)
+  criteria({:name, name}, where: el.name == ^name)
+  criteria({:surname, surname}, where: el.surname == ^surname)
+  criteria({:order_by, field}, order_by: ^field)
 end
