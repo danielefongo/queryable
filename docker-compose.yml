@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  queryable:
+    build: "."
+    volumes:
+      - .:/$PWD
+    working_dir: $PWD
+    depends_on:
+      - db
+    environment:
+      DB_HOSTNAME: db
+
+  db:
+    image: postgres:9.6-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: queryable
+      POSTGRES_USER: queryable
+      POSTGRES_DB: queryable
