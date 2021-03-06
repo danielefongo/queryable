@@ -7,7 +7,7 @@ defmodule Queryable do
       import Queryable
       import Ecto.Query
 
-      def where(criteria) do
+      def query(criteria) do
         query = from(el in __MODULE__)
 
         Enum.reduce(criteria, query, &apply_criteria/2)
@@ -15,10 +15,10 @@ defmodule Queryable do
     end
   end
 
-  defmacro criteria({key, value}, opts \\ [], do: body) do
+  defmacro criteria(on, {key, value}, body) do
     quote do
       defp apply_criteria({unquote(key), unquote(value)}, query) do
-        where(query, [unquote(opts[:on])], unquote(body))
+        from([unquote(on)] in query, unquote(body))
       end
     end
   end
