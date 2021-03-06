@@ -20,7 +20,7 @@ defmodule QueryableTest do
   test "find inserted objects and sorting them" do
     insert([%Sample{name: "foo", surname: "baz"}, %Sample{name: "foo", surname: "bar"}])
 
-    [first, second] = [name: "foo", order_by: :surname] |> Sample.query() |> Repo.all()
+    [first, second] = [name: "foo", ordered_by: :surname] |> Sample.query() |> Repo.all()
 
     assert first.surname == "bar"
     assert second.surname == "baz"
