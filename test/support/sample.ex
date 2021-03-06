@@ -1,5 +1,4 @@
 defmodule Queryable.Sample do
-  use Ecto.Schema
   use Queryable
 
   schema "sample" do
