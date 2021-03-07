@@ -17,16 +17,25 @@ defmodule Queryable do
   end
 
   defmacro criteria([{key, value} | body]) do
+    filters = Module.get_attribute(__CALLER__.module, :filters, [])
+
+    if not Enum.member?(filters, key) do
+      Module.put_attribute(__CALLER__.module, :filters, filters ++ [key])
+    end
+
     quote do
       raw_criteria({unquote(key), unquote(value)}, do: unquote(body))
     end
   end
 
   defmacro __before_compile__(_env) do
+    filters = Module.get_attribute(__CALLER__.module, :filters, [])
+
     quote do
       __MODULE__
       |> Module.get_attribute(:changeset_fields)
       |> Enum.map(fn {key, _} -> key end)
+      |> Enum.filter(fn func -> not Enum.member?(unquote(filters), func) end)
       |> criteria_equal()
     end
   end
