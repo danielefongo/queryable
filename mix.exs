@@ -39,7 +39,7 @@ defmodule Queryable.MixProject do
   defp deps do
     [
       {:ecto_sql, "~> 3.1"},
-      {:postgrex, ">= 0.0.0"},
+      {:postgrex, ">= 0.0.0", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:credo, "~> 1.4.1", only: [:dev, :test]}
     ]
@@ -47,7 +47,7 @@ defmodule Queryable.MixProject do
 
   defp aliases do
     [
-      "ecto.init": ["ecto.create --quiet", "ecto.migrate --quiet"],
+      "ecto.init": ["ecto.create --quiet", "ecto.migrate --quiet --migrations-path test/migrations"],
       "format.all": [
         "format mix.exs 'lib/**/*.{ex,exs}' 'test/**/*.{ex,exs}' 'config/*.{ex,exs}'"
       ],
