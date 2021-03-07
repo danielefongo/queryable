@@ -54,8 +54,8 @@ defmodule QueryableTest do
     test "find inserted objects using multiple criteria" do
       insert([%Sample{name: "foo", surname: "bar", age: 17}])
 
-      assert [_] = Sample.name("foo") |> Sample.under(18) |> Repo.all()
-      assert [] = Sample.name("invalid") |> Sample.under(18) |> Repo.all()
+      assert [_] = Sample |> Sample.name("foo") |> Sample.under(18) |> Repo.all()
+      assert [] = Sample |> Sample.name("invalid") |> Sample.under(18) |> Repo.all()
     end
   end
 end
