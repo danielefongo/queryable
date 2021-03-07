@@ -70,30 +70,20 @@ defmodule Queryable do
     end
 
     quote do
-      raw_criteria({unquote(key), unquote(value)}, do: unquote(body))
+      raw_criteria {unquote(key), unquote(value)} do
+        unquote(body)
+      end
     end
   end
 
-  defmacro __before_compile__(_env) do
-    filters = Module.get_attribute(__CALLER__.module, :filters, [])
+  @doc """
+  Create a virtual field that can be queried.
 
-    quote do
-      __MODULE__
-      |> Module.get_attribute(:changeset_fields)
-      |> Enum.map(fn {key, _} -> key end)
-      |> Enum.filter(fn func -> not Enum.member?(unquote(filters), func) end)
-      |> criteria_equal()
-    end
-  end
-
-  defmacro criteria_equal(fields) do
-    quote bind_quoted: [fields: fields] do
-      Enum.each(fields, fn field ->
-        raw_criteria({unquote(field), value}, do: [where: field(el, ^unquote(field)) == ^value])
-      end)
-    end
-  end
-
+  ## Example
+      raw_criteria {under: age} do
+        [where: el.age < ^age]
+      end
+  """
   defmacro raw_criteria({atom, value}, _opts \\ [], do: body) do
     quote do
       defp apply_criteria({unquote(atom), unquote(value)}, query) do
@@ -107,6 +97,29 @@ defmodule Queryable do
       def unquote(atom)(query, unquote(value)) do
         from([el] in query, unquote(body))
       end
+    end
+  end
+
+  defmacro __before_compile__(_env) do
+    filters = Module.get_attribute(__CALLER__.module, :filters, [])
+
+    quote do
+      fields = __MODULE__
+      |> Module.get_attribute(:changeset_fields)
+      |> Enum.map(fn {key, _} -> key end)
+      |> Enum.filter(fn func -> not Enum.member?(unquote(filters), func) end)
+
+      unquote(criteria_equal(quote do: fields))
+    end
+  end
+
+  defp criteria_equal(fields) do
+    quote bind_quoted: [fields: fields] do
+      Enum.each(fields, fn field ->
+        raw_criteria {unquote(field), value} do
+          [where: field(el, ^unquote(field)) == ^value]
+        end
+      end)
     end
   end
 end
