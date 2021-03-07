@@ -1,5 +1,7 @@
 # Queryable
 
+[![Continuous Integration](https://github.com/danielefongo/queryable/actions/workflows/elixir.yml/badge.svg)](https://github.com/danielefongo/queryable/actions/workflows/elixir.yml)
+
 Enhance Ecto with powerful queries.
 
 ## Installation
