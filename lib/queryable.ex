@@ -28,7 +28,7 @@ defmodule Queryable do
       iex> Person.name("John") |> Person.under(18)
       iex> #Ecto.Query<from s0 in Person, where: s0.name == ^"John", where: s0.age < ^18>
 
-  The latter option enables compile time checks (eg: credo+dialyxir) if you want to be sure
+  The latter option enables compile time checks (eg: dialyxir) if you want to be sure
   you are building the query properly.
   """
 
@@ -49,19 +49,21 @@ defmodule Queryable do
   end
 
   @doc """
-  Create a virtual field that can be queried. Object must be referred using `el` keyword.
+  Create a virtual field that can be queried.
 
   ## Example
       criteria(under: age, where: el.age < ^age)
       criteria(ordered_by: field, order_by: ^field)
 
-  You can also use pattern matching:
+  You can also use pattern matching.
 
   ## Example
       criteria(age: [from, to], where: el.age >= ^from and el.age <= ^to)
       criteria(age: age, where: el.age == ^age)
 
   If you define a custom criteria for schema field, default query for that field will be replaced.
+
+  N.B. Object must be referred using `el` keyword.
   """
   defmacro criteria([{key, value} | body]) do
     filters = Module.get_attribute(__CALLER__.module, :filters, [])

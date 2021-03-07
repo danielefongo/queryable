@@ -1,15 +1,30 @@
 defmodule Queryable.MixProject do
   use Mix.Project
 
+  @github "https://github.com/danielefongo/queryable"
+  @version "0.1.0"
+
   def project do
     [
       app: :queryble,
-      version: "0.1.0",
+      description: "Enhance Ecto with powerful queries",
+      source_url: @github,
+      version: @version,
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      package: [
+        links: %{"GitHub" => @github},
+        licenses: ["GPL-3.0-or-later"]
+      ],
+      docs: [
+        main: "readme",
+        extras: ["README.md", "LICENSE"],
+        source_ref: "v#{@version}",
+        source_url: @github
+      ]
     ]
   end
 
@@ -25,6 +40,7 @@ defmodule Queryable.MixProject do
     [
       {:ecto_sql, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:credo, "~> 1.4.1", only: [:dev, :test]}
     ]
   end

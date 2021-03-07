@@ -1,6 +1,8 @@
 # Queryable
 
 [![Continuous Integration](https://github.com/danielefongo/queryable/actions/workflows/elixir.yml/badge.svg)](https://github.com/danielefongo/queryable/actions/workflows/elixir.yml)
+[![Hex pm](http://img.shields.io/hexpm/v/queryable.svg?style=flat)](https://hex.pm/packages/queryable)
+![Hex.pm](https://img.shields.io/hexpm/l/queryable)
 
 Enhance Ecto with powerful queries.
 
@@ -11,10 +13,14 @@ The package can be installed by adding `queryable` to your list of dependencies 
 ```elixir
 def deps do
   [
-    {:queryable, git: "https://github.com/danielefongo/queryable.git"}
+    {:queryable, "~> 0.1.0"}
   ]
 end
 ```
+
+## Documentation
+
+Documentation can be found at [https://hexdocs.pm/queryable](https://hexdocs.pm/queryable).
 
 ## Usage
 
@@ -45,5 +51,4 @@ Person.query(name: "John", under: 18)
 Person.name("John") |> Person.under(18)
 ```
 
-Note that schema fields are automatically queryable.
 This query can then be passed to methods like `Repo.all`.
