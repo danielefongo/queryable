@@ -1,6 +1,4 @@
 defmodule Queryable do
-  def hello, do: :ok
-
   defmacro __using__(_opts) do
     quote do
       use Ecto.Schema
