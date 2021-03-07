@@ -1,5 +1,36 @@
 defmodule Queryable do
-  @moduledoc false
+  @moduledoc """
+  Queryable inject query utility functions inside an Ecto Schema.
+
+  ## Example
+      defmodule Person do
+        use Queryable #instead of Ecto.Schema
+        schema "persons" do
+          field :name, :string
+          field :surname, :string
+          field :age, :integer
+        end
+
+        criteria(under: age, where: el.age < ^age)
+      end
+
+  By default, using Queryable within an Ecto Schema, creates a function `&query/1` that accepts a list of
+  optional keywords, each one corresponding to a declared field or to one of the virtual fields declared on
+  method `criteria`. A typical use can be the following:
+
+      iex> Person.query(name: "John", under: 18)
+      iex> #Ecto.Query<from s0 in Person, where: s0.name == ^"John", where: s0.age < ^18>
+
+  Furthermore, for each field or virtual field, a builder function with the same name is created.
+  For example, the previous query can be rewritten using builder:
+
+      iex> Person.name("John") |> Person.under(18)
+      iex> #Ecto.Query<from s0 in Person, where: s0.name == ^"John", where: s0.age < ^18>
+
+  The latter option enables compile time checks (eg: credo+dialyxir) if you want to be sure
+  you are building the query properly.
+  """
+
   defmacro __using__(_opts) do
     quote do
       use Ecto.Schema
@@ -16,6 +47,21 @@ defmodule Queryable do
     end
   end
 
+  @doc """
+  Create a virtual field that can be queried.
+
+  ## Example
+      criteria(under: age, where: el.age < ^age)
+      criteria(ordered_by: field, order_by: ^field)
+
+  You can also use pattern matching:
+
+  ## Example
+      criteria(age: [from, to], where: el.age < ^from and el.age < ^to)
+      criteria(age: age, where: el.age == ^age)
+
+  If you define a custom criteria for schema field, default query for that field will be replaced.
+  """
   defmacro criteria([{key, value} | body]) do
     filters = Module.get_attribute(__CALLER__.module, :filters, [])
 
