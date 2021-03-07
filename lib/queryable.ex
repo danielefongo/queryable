@@ -89,10 +89,11 @@ defmodule Queryable do
     filters = Module.get_attribute(__CALLER__.module, :filters, [])
 
     quote do
-      fields = __MODULE__
-      |> Module.get_attribute(:changeset_fields)
-      |> Enum.map(fn {key, _} -> key end)
-      |> Enum.filter(fn func -> not Enum.member?(unquote(filters), func) end)
+      fields =
+        __MODULE__
+        |> Module.get_attribute(:changeset_fields)
+        |> Enum.map(fn {key, _} -> key end)
+        |> Enum.filter(fn func -> not Enum.member?(unquote(filters), func) end)
 
       unquote(criteria_equal(quote do: fields))
     end
