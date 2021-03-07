@@ -71,31 +71,15 @@ defmodule Queryable do
     end
 
     quote do
-      raw_criteria {unquote(key), unquote(value)} do
-        unquote(body)
-      end
-    end
-  end
-
-  @doc """
-  Create a virtual field that can be queried. Object must be referred using `el` keyword.
-
-  ## Example
-      raw_criteria {under: age} do
-        [where: el.age < ^age]
-      end
-  """
-  defmacro raw_criteria({atom, value}, _opts \\ [], do: body) do
-    quote do
-      defp apply_criteria({unquote(atom), unquote(value)}, query) do
+      defp apply_criteria({unquote(key), unquote(value)}, query) do
         from([el] in query, unquote(body))
       end
 
-      def unquote(atom)(unquote(value)) do
+      def unquote(key)(unquote(value)) do
         from([el] in __MODULE__, unquote(body))
       end
 
-      def unquote(atom)(query, unquote(value)) do
+      def unquote(key)(query, unquote(value)) do
         from([el] in query, unquote(body))
       end
     end
@@ -117,9 +101,7 @@ defmodule Queryable do
   defp criteria_equal(fields) do
     quote bind_quoted: [fields: fields] do
       Enum.each(fields, fn field ->
-        raw_criteria {unquote(field), value} do
-          [where: field(el, ^unquote(field)) == ^value]
-        end
+        criteria([{unquote(field), value}, where: field(el, ^unquote(field)) == ^value])
       end)
     end
   end
