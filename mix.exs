@@ -25,8 +25,7 @@ defmodule Queryable.MixProject do
     [
       {:ecto_sql, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
-      {:credo, "~> 1.4.1", only: [:dev, :test]},
-      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.4.1", only: [:dev, :test]}
     ]
   end
 
@@ -42,8 +41,7 @@ defmodule Queryable.MixProject do
       check: [
         "compile --all-warnings --ignore-module-conflict --warnings-as-errors --debug-info",
         "format.check",
-        "credo -a",
-        "dialyzer"
+        "credo"
       ],
       test: ["ecto.init", "test"]
     ]
