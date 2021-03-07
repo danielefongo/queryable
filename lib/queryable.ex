@@ -1,4 +1,5 @@
 defmodule Queryable do
+  @moduledoc false
   defmacro __using__(_opts) do
     quote do
       use Ecto.Schema
@@ -17,7 +18,7 @@ defmodule Queryable do
 
   defmacro criteria([{key, value} | body]) do
     quote do
-      raw_criteria {unquote(key), unquote(value)}, do: unquote(body)
+      raw_criteria({unquote(key), unquote(value)}, do: unquote(body))
     end
   end
 
@@ -33,7 +34,7 @@ defmodule Queryable do
   defmacro criteria_equal(fields) do
     quote bind_quoted: [fields: fields] do
       Enum.each(fields, fn field ->
-        raw_criteria {unquote(field), value}, do: [where: field(el, ^unquote(field)) == ^value]
+        raw_criteria({unquote(field), value}, do: [where: field(el, ^unquote(field)) == ^value])
       end)
     end
   end

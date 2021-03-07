@@ -24,7 +24,9 @@ defmodule Queryable.MixProject do
   defp deps do
     [
       {:ecto_sql, "~> 3.1"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0"},
+      {:credo, "~> 1.4.1", only: [:dev, :test]},
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -33,6 +35,15 @@ defmodule Queryable.MixProject do
       "ecto.init": ["ecto.create --quiet", "ecto.migrate --quiet"],
       "format.all": [
         "format mix.exs 'lib/**/*.{ex,exs}' 'test/**/*.{ex,exs}' 'config/*.{ex,exs}'"
+      ],
+      "format.check": [
+        "format --check-formatted mix.exs 'lib/**/*.{ex,exs}' 'test/**/*.{ex,exs}' 'config/*.{ex, exs}'"
+      ],
+      check: [
+        "compile --all-warnings --ignore-module-conflict --warnings-as-errors --debug-info",
+        "format.check",
+        "credo -a",
+        "dialyzer"
       ],
       test: ["ecto.init", "test"]
     ]

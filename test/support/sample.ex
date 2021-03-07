@@ -1,4 +1,5 @@
 defmodule Queryable.Sample do
+  @moduledoc false
   use Queryable
 
   schema "sample" do
