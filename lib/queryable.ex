@@ -65,47 +65,50 @@ defmodule Queryable do
 
   N.B. Object must be referred using `el` keyword.
   """
-  defmacro criteria([{key, value} | body]) do
-    filters = Module.get_attribute(__CALLER__.module, :filters, [])
-
-    if not Enum.member?(filters, key) do
-      Module.put_attribute(__CALLER__.module, :filters, filters ++ [key])
-    end
+  defmacro criteria([{field, value} | body]) do
+    module = __CALLER__.module
 
     quote do
-      defp apply_criteria({unquote(key), unquote(value)}, query) do
-        from([el] in query, unquote(body))
-      end
-
-      def unquote(key)(unquote(value)) do
-        from([el] in __MODULE__, unquote(body))
-      end
-
-      def unquote(key)(query, unquote(value)) do
-        from([el] in query, unquote(body))
-      end
+      unquote(setup_criteria(quote do: [unquote(module), unquote(field), unquote(value), unquote(body)]))
     end
   end
 
   defmacro __before_compile__(_env) do
-    filters = Module.get_attribute(__CALLER__.module, :filters, [])
+    module = __CALLER__.module
 
-    quote do
-      fields =
-        __MODULE__
-        |> Module.get_attribute(:changeset_fields)
-        |> Enum.map(fn {key, _} -> key end)
-        |> Enum.filter(fn func -> not Enum.member?(unquote(filters), func) end)
+    fields = Module.get_attribute(module, :fields, [])
 
-      unquote(criteria_equal(quote do: fields))
-    end
+    module
+    |> Module.get_attribute(:changeset_fields)
+    |> Enum.map(fn {field, _} -> field end)
+    |> Enum.filter(fn field -> not Enum.member?(fields, field) end)
+    |> Enum.map(fn field ->
+      value = quote do: value
+      body = quote do: [where: field(el, ^unquote(field)) == ^unquote(value)]
+
+      setup_criteria(quote do: [unquote(module), unquote(field), unquote(value), unquote(body)])
+    end)
   end
 
-  defp criteria_equal(fields) do
-    quote bind_quoted: [fields: fields] do
-      Enum.each(fields, fn field ->
-        criteria([{unquote(field), value}, where: field(el, ^unquote(field)) == ^value])
-      end)
+  defp setup_criteria([module, field, value, body]) do
+    quote do
+      fields = Module.get_attribute(unquote(module), :fields, [])
+
+      if not Enum.member?(fields, unquote(field)) do
+        Module.put_attribute(unquote(module), :fields, fields ++ [unquote(field)])
+      end
+
+      defp apply_criteria({unquote(field), unquote(value)}, query) do
+        from([el] in query, unquote(body))
+      end
+
+      def unquote(field)(unquote(value)) do
+        from([el] in unquote(module), unquote(body))
+      end
+
+      def unquote(field)(query, unquote(value)) do
+        from([el] in query, unquote(body))
+      end
     end
   end
 end
