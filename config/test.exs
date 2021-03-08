@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :queryble, Queryable.Repo,
+config :queryable, Queryable.Repo,
   database: "queryable",
   username: "queryable",
   password: "queryable",
@@ -8,4 +8,4 @@ config :queryble, Queryable.Repo,
   port: System.get_env("POSTGRES_PORT", "5432"),
   pool: Ecto.Adapters.SQL.Sandbox
 
-config :queryble, ecto_repos: [Queryable.Repo]
+config :queryable, ecto_repos: [Queryable.Repo]

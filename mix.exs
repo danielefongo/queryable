@@ -6,7 +6,7 @@ defmodule Queryable.MixProject do
 
   def project do
     [
-      app: :queryble,
+      app: :queryable,
       description: "Enhance Ecto with powerful queries",
       source_url: @github,
       version: @version,
