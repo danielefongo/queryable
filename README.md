@@ -1,6 +1,6 @@
 # Queryable
 
-[![Continuous Integration](https://github.com/danielefongo/queryable/actions/workflows/elixir.yml/badge.svg)](https://github.com/danielefongo/queryable/actions/workflows/elixir.yml)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/danielefongo/queryable/ci)
 ![Coveralls](https://img.shields.io/coveralls/github/danielefongo/queryable)
 [![Hex pm](http://img.shields.io/hexpm/v/queryable.svg?style=flat)](https://hex.pm/packages/queryable)
 ![Hex.pm](https://img.shields.io/hexpm/l/queryable)
