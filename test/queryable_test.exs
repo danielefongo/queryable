@@ -2,33 +2,47 @@ defmodule QueryableTest do
   use ExUnit.Case
   use DbTest
 
+  defmodule Sample do
+    @moduledoc false
+    use Queryable
+
+    schema "sample" do
+      field(:name, :string)
+      field(:surname, :string)
+      field(:age, :integer)
+    end
+
+    criteria(under: age, where: el.age < ^age)
+    criteria(ordered_by: field, order_by: ^field)
+  end
+
   describe "on keyword query" do
     test "find inserted objects using single criteria" do
       insert([%Sample{name: "foo", age: 18}, %Sample{name: "foo", age: 17}])
 
-      assert [_, _] = find(under: 19)
-      assert [_] = find(under: 18)
-      assert [] = find(under: 17)
+      assert [_, _] = find(Sample, under: 19)
+      assert [_] = find(Sample, under: 18)
+      assert [] = find(Sample, under: 17)
     end
 
     test "find inserted objects using default criteria (schema fields)" do
       insert([%Sample{name: "foo", surname: "bar"}])
 
-      assert [_] = find(name: "foo")
-      assert [_] = find(surname: "bar")
+      assert [_] = find(Sample, name: "foo")
+      assert [_] = find(Sample, surname: "bar")
     end
 
     test "find inserted objects using multiple criteria" do
       insert([%Sample{name: "foo", surname: "bar", age: 17}])
 
-      assert [_] = find(name: "foo", under: 18)
-      assert [] = find(name: "invalid", under: 18)
+      assert [_] = find(Sample, name: "foo", under: 18)
+      assert [] = find(Sample, name: "invalid", under: 18)
     end
 
     test "find inserted objects and sorting them" do
       insert([%Sample{name: "foo", surname: "baz"}, %Sample{name: "foo", surname: "bar"}])
 
-      [first, second] = find(name: "foo", ordered_by: :surname)
+      [first, second] = find(Sample, name: "foo", ordered_by: :surname)
 
       assert first.surname == "bar"
       assert second.surname == "baz"

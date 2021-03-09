@@ -15,6 +15,13 @@ defmodule Queryable.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       aliases: aliases(),
       deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
       package: [
         links: %{"GitHub" => @github},
         licenses: ["GPL-3.0-or-later"]
@@ -41,7 +48,8 @@ defmodule Queryable.MixProject do
       {:ecto_sql, "~> 3.1"},
       {:postgrex, ">= 0.0.0", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:credo, "~> 1.4.1", only: [:dev, :test]}
+      {:credo, "~> 1.4.1", only: [:dev, :test]},
+      {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 

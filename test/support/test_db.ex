@@ -2,21 +2,18 @@ defmodule DbTest do
   @moduledoc false
   defmacro __using__(_) do
     quote do
-      alias Queryable.{Repo, Sample}
+      alias Queryable.Repo
 
       setup do
         Ecto.Adapters.SQL.Sandbox.checkout(Repo)
         :ok
       end
 
-      defp insert(elements) when is_list(elements),
-        do: Enum.each(elements, fn element -> Repo.insert(element) end)
+      defp insert(elements), do: Enum.each(elements, &Repo.insert/1)
 
-      defp insert(element) when is_struct(element), do: Repo.insert(element)
-
-      defp find(criteria) do
+      defp find(schema, criteria) do
         criteria
-        |> Sample.query()
+        |> schema.query()
         |> Repo.all()
       end
     end
